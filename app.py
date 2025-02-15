@@ -13,6 +13,7 @@ login_manager.login_view = 'index'
 DATABASE = 'database.db'
 
 def get_db():
+    """Obtém a conexão com o banco de dados."""
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
@@ -20,6 +21,7 @@ def get_db():
     return db
 
 def init_db():
+    """Inicializa o banco de dados e cria as tabelas necessárias."""
     with app.app_context():
         db = get_db()
         db.execute('''
@@ -40,12 +42,14 @@ def init_db():
         db.commit()
 
 class User(UserMixin):
+    """Classe de usuário para autenticação."""
     def __init__(self, user_id, username):
-        self.id = str(user_id)  # Garantindo que seja uma string
+        self.id = str(user_id)
         self.username = username
 
 @login_manager.user_loader
 def load_user(user_id):
+    """Carrega o usuário pelo ID."""
     db = get_db()
     user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     if user:
@@ -54,16 +58,19 @@ def load_user(user_id):
 
 @app.teardown_appcontext
 def close_db(exception=None):
+    """Fecha a conexão com o banco de dados ao encerrar a requisição."""
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
 
 @app.route('/')
 def index():
+    """Página inicial."""
     return render_template('index.html')
 
 @app.route('/api/register', methods=['POST'])
 def register():
+    """Endpoint para registrar um novo usuário."""
     data = request.json
     username = data.get('username')
     password = data.get('password')
@@ -83,6 +90,7 @@ def register():
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    """Endpoint para login do usuário."""
     data = request.json
     username = data.get('username')
     password = data.get('password')
@@ -98,17 +106,20 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    """Página do dashboard, visível apenas para usuários autenticados."""
     return render_template('dashboard.html')
 
 @app.route('/logout')
 @login_required
 def logout():
+    """Logout do usuário."""
     logout_user()
     return redirect(url_for('index'))
 
 @app.route('/api/contacts', methods=['GET'])
 @login_required
 def get_contacts():
+    """Endpoint para obter a lista de contatos."""
     db = get_db()
     contacts = db.execute('SELECT id, name, phone, created_at FROM contacts').fetchall()
     return jsonify([dict(contact) for contact in contacts])
@@ -116,6 +127,7 @@ def get_contacts():
 @app.route('/api/contact', methods=['POST'])
 @login_required
 def add_contact():
+    """Endpoint para adicionar um novo contato."""
     data = request.json
     name = data.get('name')
     phone = data.get('phone')
@@ -131,6 +143,7 @@ def add_contact():
 @app.route('/api/contact/<int:contact_id>', methods=['DELETE'])
 @login_required
 def delete_contact(contact_id):
+    """Endpoint para deletar um contato."""
     db = get_db()
     db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
     db.commit()
@@ -139,6 +152,7 @@ def delete_contact(contact_id):
 @app.route('/api/contact/<int:contact_id>', methods=['PUT'])
 @login_required
 def update_contact(contact_id):
+    """Endpoint para atualizar um contato."""
     data = request.json
     name = data.get('name')
     phone = data.get('phone')
@@ -154,9 +168,18 @@ def update_contact(contact_id):
 @app.route('/contacts')
 @login_required
 def contacts():
+    """Página para exibir os contatos registrados."""
     db = get_db()
     contacts = db.execute('SELECT id, name, phone, created_at FROM contacts').fetchall()
     return render_template('contacts.html', contacts=contacts)
+
+@app.route('/users')
+@login_required
+def users():
+    """Página para exibir os usuários registrados."""
+    db = get_db()
+    users = db.execute('SELECT id, username FROM users').fetchall()
+    return render_template('users.html', users=users)
 
 if __name__ == '__main__':
     init_db()
