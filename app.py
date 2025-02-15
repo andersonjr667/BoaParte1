@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, g
 import sqlite3
 import bcrypt
+import os
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
-app.secret_key = 'chave_secreta_super_segura'
+app.secret_key = os.getenv('SECRET_KEY', 'chave_secreta_super_segura')  # Melhor prática para produção
 login_manager = LoginManager(app)
 login_manager.login_view = 'index'
 
@@ -39,21 +40,20 @@ def init_db():
         db.commit()
 
 class User(UserMixin):
-    def __init__(self, id, username, password):
-        self.id = id
+    def __init__(self, user_id, username):
+        self.id = str(user_id)  # Garantindo que seja uma string
         self.username = username
-        self.password = password
 
 @login_manager.user_loader
 def load_user(user_id):
     db = get_db()
     user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     if user:
-        return User(user['id'], user['username'], user['password'])
+        return User(user['id'], user['username'])
     return None
 
 @app.teardown_appcontext
-def close_db(error):
+def close_db(exception=None):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
@@ -67,8 +67,12 @@ def register():
     data = request.json
     username = data.get('username')
     password = data.get('password')
+
+    if not username or not password:
+        return jsonify({'error': 'Usuário e senha são obrigatórios'}), 400
+
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    
+
     db = get_db()
     try:
         db.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
@@ -86,10 +90,10 @@ def login():
     user = db.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
     
     if user and bcrypt.checkpw(password.encode(), user['password'].encode()):
-        user_obj = User(user['id'], user['username'], user['password'])
+        user_obj = User(user['id'], user['username'])
         login_user(user_obj)
         return jsonify({'message': 'Login bem-sucedido!'}), 200
-    return jsonify({'error': 'Credenciais inválidas'}), 401
+    return jsonify({'error': 'Usuário ou senha incorretos'}), 401
 
 @app.route('/dashboard')
 @login_required
@@ -147,12 +151,12 @@ def update_contact(contact_id):
     db.commit()
     return jsonify({'message': 'Contato atualizado!'}), 200
 
-@app.route('/users')
+@app.route('/contacts')
 @login_required
-def users():
+def contacts():
     db = get_db()
     contacts = db.execute('SELECT id, name, phone, created_at FROM contacts').fetchall()
-    return render_template('users.html', contacts=contacts)
+    return render_template('contacts.html', contacts=contacts)
 
 if __name__ == '__main__':
     init_db()

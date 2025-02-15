@@ -7,15 +7,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
     <h2>Lista de Contatos Registrados</h2>
     
-    <table border="1">
+    <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Número de Telefone</th>
-                <th>Data de Registro</th>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Número de Telefone</th>
+                <th scope="col">Data de Registro</th>
             </tr>
         </thead>
         <tbody>
@@ -26,11 +27,18 @@
                 <td>{{ contact.phone }}</td>
                 <td>{{ contact.created_at }}</td>
             </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">Nenhum contato registrado.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <br>
-    <a href="{{ url_for('dashboard') }}">Voltar ao Dashboard</a>
+    <div class="buttons">
+        <a href="{{ url_for('dashboard') }}" class="btn">Voltar ao Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+
 </body>
 </html>
