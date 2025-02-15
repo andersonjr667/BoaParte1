@@ -10,12 +10,13 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'index'
 
 # Configuração do banco de dados
-DATABASE = 'database.db'
+DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
 
 def get_db():
     """Obtém a conexão com o banco de dados."""
     db = getattr(g, '_database', None)
     if db is None:
+        print("Conectando ao banco de dados...")
         db = g._database = sqlite3.connect(DATABASE)
         db.row_factory = sqlite3.Row
     return db
@@ -24,6 +25,7 @@ def init_db():
     """Inicializa o banco de dados e cria as tabelas necessárias."""
     with app.app_context():
         db = get_db()
+        print("Inicializando banco de dados...")
         db.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,6 +42,7 @@ def init_db():
             )
         ''')
         db.commit()
+        print("Banco de dados inicializado com sucesso.")
 
 class User(UserMixin):
     """Classe de usuário para autenticação."""
@@ -136,18 +139,27 @@ def add_contact():
         return jsonify({'error': 'Dados incompletos'}), 400
 
     db = get_db()
-    db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
-    db.commit()
-    return jsonify({'message': 'Contato adicionado!'}), 200
+    try:
+        print(f"Adicionando contato: {name}, {phone}")
+        db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+        db.commit()
+        return jsonify({'message': 'Contato adicionado!'}), 200
+    except Exception as e:
+        print(f"Erro ao adicionar contato: {e}")
+        return jsonify({'error': 'Erro ao adicionar contato'}), 500
 
 @app.route('/api/contact/<int:contact_id>', methods=['DELETE'])
 @login_required
 def delete_contact(contact_id):
     """Endpoint para deletar um contato."""
     db = get_db()
-    db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
-    db.commit()
-    return jsonify({'message': 'Contato removido!'}), 200
+    try:
+        db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
+        db.commit()
+        return jsonify({'message': 'Contato removido!'}), 200
+    except Exception as e:
+        print(f"Erro ao deletar contato: {e}")
+        return jsonify({'error': 'Erro ao deletar contato'}), 500
 
 @app.route('/api/contact/<int:contact_id>', methods=['PUT'])
 @login_required
@@ -161,9 +173,13 @@ def update_contact(contact_id):
         return jsonify({'error': 'Dados incompletos'}), 400
     
     db = get_db()
-    db.execute('UPDATE contacts SET name = ?, phone = ? WHERE id = ?', (name, phone, contact_id))
-    db.commit()
-    return jsonify({'message': 'Contato atualizado!'}), 200
+    try:
+        db.execute('UPDATE contacts SET name = ?, phone = ? WHERE id = ?', (name, phone, contact_id))
+        db.commit()
+        return jsonify({'message': 'Contato atualizado!'}), 200
+    except Exception as e:
+        print(f"Erro ao atualizar contato: {e}")
+        return jsonify({'error': 'Erro ao atualizar contato'}), 500
 
 @app.route('/contacts')
 @login_required
@@ -184,3 +200,4 @@ def users():
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+    
