@@ -1,0 +1,7 @@
+User@ C:\Users\User
+Ôö£ÔöÇÔöÇ dotenv@16.4.7
+Ôö£ÔöÇÔöÇ express@4.21.2
+Ôö£ÔöÇÔöÇ mongodb@6.13.0
+Ôö£ÔöÇÔöÇ mongoose@8.10.1
+ÔööÔöÇÔöÇ puppeteer@24.1.1
+

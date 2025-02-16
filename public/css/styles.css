@@ -1,0 +1,142 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Container do Dashboard */
+.dashboard-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* Título do Dashboard */
+.dashboard-container h2 {
+    margin-bottom: 20px;
+    color: #444;
+    font-size: 24px;
+}
+
+/* Container do Formulário */
+.form-container {
+    margin-bottom: 20px;
+}
+
+.form-container h3 {
+    margin-bottom: 15px;
+    color: #555;
+    font-size: 18px;
+}
+
+/* Campos de Entrada */
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 8px rgba(106, 17, 203, 0.3);
+}
+
+/* Botões */
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    transform: translateY(-2px);
+}
+
+/* Botão de Logout */
+.logout-btn {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    margin-top: 20px;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #c82333, #dc3545);
+}
+
+/* Container da Lista de Contatos */
+.contacts-container {
+    margin-top: 20px;
+}
+
+.contacts-container h3 {
+    margin-bottom: 15px;
+    color: #555;
+    font-size: 18px;
+}
+
+/* Lista de Contatos */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #f8f9fa;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 20px;
+    }
+
+    .dashboard-container h2 {
+        font-size: 20px;
+    }
+
+    input[type="text"] {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    li {
+        font-size: 14px;
+    }
+}
