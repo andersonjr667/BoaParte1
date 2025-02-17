@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Contatos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
-
 </head>
 <body>
-    <h1>Lista de Contatos</h1>
-    <ul id="contatos-lista"></ul>
+    <div class="container">
+        <div class="form-container">
+            <h2>Lista de Contatos</h2>
+            <ul id="contatos-lista" class="contacts-list"></ul>
+        </div>
+    </div>
 
     <script>
         async function carregarContatos() {
