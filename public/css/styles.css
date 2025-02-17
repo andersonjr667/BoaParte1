@@ -15,29 +15,7 @@ body {
     color: #2e7d32; /* Verde escuro para texto */
 }
 
-/* Estilos para os botÃµes do dashboard */
-.dashboard-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: center;
-}
 
-.view-contacts-btn {
-    padding: 12px 25px;
-    background: linear-gradient(135deg, #0b3d02, #c0ff72); /* Gradiente de verde bem escuro para verde limÃ£o */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.view-contacts-btn:hover {
-    background: linear-gradient(135deg, #0b3d02, #aaff50);
-    transform: translateY(-2px);
-}
 
 /* Container principal */
 .container {
