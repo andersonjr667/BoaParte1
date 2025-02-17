@@ -24,12 +24,17 @@
             <ul id="contactsList"></ul>
         </div>
 
-        <!-- Botão de logout -->
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <!-- Botões de ação -->
+        <div class="dashboard-actions">
+            <button class="view-contacts-btn" onclick="window.location.href='/users'">
+                Ver Todos os Contatos
+            </button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
     </div>
 
     <script>
-        // Função para adicionar um contato
+        // Função para adicionar um contato (mantida igual)
         async function addContact() {
             const name = document.getElementById("contactName").value;
             const phone = document.getElementById("contactPhone").value;
@@ -51,10 +56,10 @@
 
                 if (response.ok) {
                     alert("Contato adicionado com sucesso!");
-                    loadContacts(); // Recarrega a lista de contatos
+                    loadContacts();
                 } else {
                     const errorData = await response.json();
-                    alert(`Erro: ${errorData.message}`);
+                    alert(`Erro: ${errorData.error}`);
                 }
             } catch (error) {
                 console.error("Erro ao adicionar contato:", error);
@@ -62,7 +67,7 @@
             }
         }
 
-        // Função para carregar a lista de contatos
+        // Função para carregar contatos (mantida igual)
         async function loadContacts() {
             try {
                 const response = await fetch("/getContacts", {
@@ -74,12 +79,10 @@
                 if (response.ok) {
                     const contacts = await response.json();
                     const contactsList = document.getElementById("contactsList");
-                    contactsList.innerHTML = ""; // Limpa a lista
+                    contactsList.innerHTML = "";
 
                     contacts.forEach(contact => {
                         const li = document.createElement("li");
-
-                        // Formata a data e hora
                         const createdAt = new Date(contact.createdAt).toLocaleString("pt-BR", {
                             day: "2-digit",
                             month: "2-digit",
@@ -100,7 +103,7 @@
             }
         }
 
-        // Função para fazer logout
+        // Função para logout (mantida igual)
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "index.html";
