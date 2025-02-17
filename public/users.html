@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Contatos</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .blurred {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,24 +22,46 @@
 
     <script>
         async function carregarContatos() {
-            try {
-                const resposta = await fetch("/contatos");
-                const contatos = await resposta.json();
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                // Se não houver token, aplica o efeito de borrão
                 const lista = document.getElementById("contatos-lista");
-                lista.innerHTML = "";
+                lista.classList.add("blurred");
+                lista.innerHTML = "<li>Você precisa estar logado para ver os contatos.</li>";
+                return;
+            }
 
-                contatos.forEach(contato => {
-                    const li = document.createElement("li");
-
-                    // Formatação da mensagem conforme solicitado
-                    const dataFormatada = new Date(contato.createdAt).toLocaleString();
-
-                    li.textContent = `${contato.name} (${contato.phone}) foi adicionado por ${contato.username} no dia ${dataFormatada}`;
-
-                    lista.appendChild(li);
+            try {
+                const resposta = await fetch("/contatos", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
                 });
+
+                if (resposta.ok) {
+                    const contatos = await resposta.json();
+                    const lista = document.getElementById("contatos-lista");
+                    lista.innerHTML = "";
+
+                    contatos.forEach(contato => {
+                        const li = document.createElement("li");
+
+                        // Formatação da mensagem conforme solicitado
+                        const dataFormatada = new Date(contato.createdAt).toLocaleString();
+
+                        li.textContent = `${contato.name} (${contato.phone}) foi adicionado por ${contato.username} no dia ${dataFormatada}`;
+
+                        lista.appendChild(li);
+                    });
+                } else {
+                    const lista = document.getElementById("contatos-lista");
+                    lista.innerHTML = "<li>Erro ao carregar contatos. Verifique se você está logado.</li>";
+                }
             } catch (erro) {
                 console.error("Erro ao carregar contatos:", erro);
+                const lista = document.getElementById("contatos-lista");
+                lista.innerHTML = "<li>Erro ao carregar contatos. Verifique sua conexão.</li>";
             }
         }
 
