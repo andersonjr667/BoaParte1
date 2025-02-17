@@ -34,7 +34,7 @@
     </div>
 
     <script>
-        // Função para adicionar um contato (mantida igual)
+        // Função para adicionar um contato
         async function addContact() {
             const name = document.getElementById("contactName").value;
             const phone = document.getElementById("contactPhone").value;
@@ -67,7 +67,7 @@
             }
         }
 
-        // Função para carregar contatos (mantida igual)
+        // Função para carregar contatos
         async function loadContacts() {
             try {
                 const response = await fetch("/getContacts", {
@@ -103,7 +103,7 @@
             }
         }
 
-        // Função para logout (mantida igual)
+        // Função para logout
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "index.html";
