@@ -13,12 +13,13 @@
 
         .button-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column; /* Alinha os botões verticalmente */
+            gap: 10px; /* Espaçamento entre os botões */
             margin-top: 20px;
         }
 
         .button-container button {
-            width: 48%; /* Ajusta a largura dos botões */
+            width: 100%; /* Botões ocupam a largura total */
             padding: 10px;
             border: none;
             border-radius: 8px;
@@ -48,6 +49,24 @@
         .button-container .logout-btn:hover {
             background: linear-gradient(135deg, #b71c1c, #d32f2f);
         }
+
+        /* Estilo para o círculo verde escuro em volta do contato */
+        #contatos-lista li {
+            background: #1b5e20; /* Verde escuro */
+            color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 50px; /* Círculo */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: justify; /* Texto justificado */
+            list-style-type: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #contatos-lista li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -56,7 +75,7 @@
             <h2>Lista de Contatos</h2>
             <ul id="contatos-lista" class="contacts-list"></ul>
 
-            <!-- Botões de Logout e Voltar para o Dashboard -->
+            <!-- Botões de Voltar para o Dashboard e Logout -->
             <div class="button-container">
                 <button class="back-btn" onclick="window.location.href='/dashboard'">Voltar para o Dashboard</button>
                 <button class="logout-btn" onclick="logout()">Logout</button>
