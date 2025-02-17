@@ -158,9 +158,24 @@ app.get("/getContacts", authenticateToken, async (req, res) => {
     }
 });
 
-// ---------- Dashboard ----------
+// ---------- Páginas ----------
 app.get("/dashboard", authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+});
+
+app.get("/users", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "users.html"));
+});
+
+// Rota para listar todos os contatos (sem autenticação para facilitar o teste)
+app.get("/contatos", async (req, res) => {
+    try {
+        const contatos = await Contact.find().sort({ createdAt: -1 });
+        res.json(contatos);
+    } catch (error) {
+        console.error("Erro ao buscar contatos:", error);
+        res.status(500).json({ error: "Erro ao carregar contatos" });
+    }
 });
 
 // ================== INICIAR SERVIDOR ==================
