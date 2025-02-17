@@ -7,7 +7,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1b5e20, #e8f5e9); /* Gradiente de verde escuro para verde claro */
+    background: linear-gradient(135deg, #0b3d02, #c0ff72); /* Gradiente de verde bem escuro para verde limÃ£o */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +25,7 @@ body {
 
 .view-contacts-btn {
     padding: 12px 25px;
-    background: linear-gradient(135deg, #43a047, #2e7d32); /* Gradiente verde */
+    background: linear-gradient(135deg, #0b3d02, #c0ff72); /* Gradiente de verde bem escuro para verde limÃ£o */
     color: white;
     border: none;
     border-radius: 8px;
@@ -35,7 +35,7 @@ body {
 }
 
 .view-contacts-btn:hover {
-    background: linear-gradient(135deg, #2e7d32, #43a047);
+    background: linear-gradient(135deg, #0b3d02, #aaff50);
     transform: translateY(-2px);
 }
 
@@ -85,7 +85,7 @@ input[type="text"]:focus, input[type="password"]:focus {
 button {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #43a047, #2e7d32); /* Gradiente verde */
+    background: linear-gradient(135deg, #0b3d02, #c0ff72); /* Gradiente de verde bem escuro para verde limÃ£o */
     color: white;
     border: none;
     border-radius: 8px;
@@ -95,7 +95,7 @@ button {
 }
 
 button:hover {
-    background: linear-gradient(135deg, #2e7d32, #43a047);
+    background: linear-gradient(135deg, #0b3d02, #aaff50);
     transform: translateY(-2px);
 }
 
@@ -172,4 +172,4 @@ contacts-container h3 {
 
 .logout-btn:hover {
     background: linear-gradient(135deg, #b71c1c, #d32f2f);
-}
+    }
