@@ -15,37 +15,33 @@ body {
     color: #333;
 }
 
-/* Container do Dashboard */
-.dashboard-container {
+/* Container principal */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 900px; /* Largura máxima para PC */
+}
+
+/* Container do Formulário */
+.form-container {
     background: rgba(255, 255, 255, 0.95);
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 500px;
+    width: 48%; /* Cada formulário ocupa 48% do espaço no PC */
     text-align: center;
 }
 
-/* Título do Dashboard */
-.dashboard-container h2 {
+.form-container h2 {
     margin-bottom: 20px;
     color: #444;
     font-size: 24px;
 }
 
-/* Container do Formulário */
-.form-container {
-    margin-bottom: 20px;
-}
-
-.form-container h3 {
-    margin-bottom: 15px;
-    color: #555;
-    font-size: 18px;
-}
-
 /* Campos de Entrada */
-input[type="text"] {
+input[type="text"], input[type="password"] {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
@@ -56,7 +52,7 @@ input[type="text"] {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus, input[type="password"]:focus {
     border-color: #6a11cb;
     box-shadow: 0 0 8px rgba(106, 17, 203, 0.3);
 }
@@ -79,64 +75,77 @@ button:hover {
     transform: translateY(-2px);
 }
 
-/* Botão de Logout */
-.logout-btn {
-    background: linear-gradient(135deg, #dc3545, #c82333);
-    margin-top: 20px;
+/* Responsividade para celular */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Coloca um formulário em cima do outro */
+        align-items: center;
+    }
+
+    .form-container {
+        width: 100%; /* Cada formulário ocupa 100% da largura no celular */
+        margin-bottom: 20px; /* Espaço entre os formulários */
+    }
+
+    .form-container:last-child {
+        margin-bottom: 0; /* Remove a margem do último formulário */
+    }
 }
 
-.logout-btn:hover {
-    background: linear-gradient(135deg, #c82333, #dc3545);
+/* Estilos específicos para o Dashboard */
+.dashboard-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 900px;
+    text-align: center;
 }
 
-/* Container da Lista de Contatos */
+.dashboard-container h2 {
+    margin-bottom: 20px;
+    color: #444;
+    font-size: 24px;
+}
+
 .contacts-container {
     margin-top: 20px;
+    text-align: left;
 }
 
 .contacts-container h3 {
     margin-bottom: 15px;
-    color: #555;
-    font-size: 18px;
+    color: #444;
+    font-size: 20px;
 }
 
-/* Lista de Contatos */
-ul {
+#contactsList {
     list-style-type: none;
     padding: 0;
 }
 
-li {
-    background: #f8f9fa;
-    padding: 12px;
-    margin: 8px 0;
+#contactsList li {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Responsividade */
-@media (max-width: 480px) {
-    .dashboard-container {
-        padding: 20px;
-    }
+#contactsList li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-    .dashboard-container h2 {
-        font-size: 20px;
-    }
+.logout-btn {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #ff4b4b, #ff1c1c);
+    width: auto;
+    padding: 10px 20px;
+}
 
-    input[type="text"] {
-        font-size: 14px;
-    }
-
-    button {
-        font-size: 14px;
-    }
-
-    li {
-        font-size: 14px;
-    }
+.logout-btn:hover {
+    background: linear-gradient(135deg, #ff1c1c, #ff4b4b);
 }
