@@ -28,7 +28,7 @@
                     // Formatação da mensagem conforme solicitado
                     const dataFormatada = new Date(contato.createdAt).toLocaleString();
 
-                    li.textContent = `${contato.name} (${contato.phone}) foi adicionado por ${contato.username} no dia ás ${dataFormatada}`;
+                    li.textContent = `${contato.name} (${contato.phone}) foi adicionado por ${contato.username} no dia ${dataFormatada}`;
 
                     lista.appendChild(li);
                 });
