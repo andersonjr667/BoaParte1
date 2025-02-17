@@ -24,7 +24,7 @@
 
                 contatos.forEach(contato => {
                     const li = document.createElement("li");
-                    li.textContent = `${contato.name} - ${contato.phone} (Usuario ${contato.username})`;
+                    li.textContent = `${contato.name} - ${contato.phone} (Adicionado por ${contato.username})`;
                     lista.appendChild(li);
                 });
             } catch (erro) {
