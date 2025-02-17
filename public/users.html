@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Contatos</title>
+</head>
+<body>
+    <h1>Lista de Contatos</h1>
+    <ul id="contatos-lista"></ul>
+
+    <script>
+        async function carregarContatos() {
+            try {
+                const resposta = await fetch("/contatos");
+                const contatos = await resposta.json();
+                const lista = document.getElementById("contatos-lista");
+                lista.innerHTML = "";
+
+                contatos.forEach(contato => {
+                    const li = document.createElement("li");
+                    li.textContent = `${contato.name} - ${contato.phone} (${contato.username})`;
+                    lista.appendChild(li);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar contatos:", erro);
+            }
+        }
+
+        carregarContatos();
+    </script>
+</body>
+</html>
