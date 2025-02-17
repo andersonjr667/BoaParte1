@@ -159,7 +159,7 @@ app.get("/getContacts", authenticateToken, async (req, res) => {
 });
 
 // ---------- Páginas ----------
-app.get("/dashboard", authenticateToken, (req, res) => {
+app.get("/dashboard.html", authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
