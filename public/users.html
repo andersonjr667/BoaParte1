@@ -24,7 +24,16 @@
 
                 contatos.forEach(contato => {
                     const li = document.createElement("li");
-                    li.textContent = `${contato.name} - ${contato.phone} (Adicionado por ${contato.username})`;
+
+                    // Criação de conteúdo para o item da lista
+                    li.innerHTML = `
+                        <strong>ID:</strong> ${contato._id} <br>
+                        <strong>Nome:</strong> ${contato.name} <br>
+                        <strong>Telefone:</strong> ${contato.phone} <br>
+                        <strong>Adicionado por:</strong> ${contato.username} <br>
+                        <strong>Data de Criação:</strong> ${new Date(contato.createdAt).toLocaleString()} <br>
+                    `;
+
                     lista.appendChild(li);
                 });
             } catch (erro) {
