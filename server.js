@@ -167,8 +167,8 @@ app.get("/users", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "users.html"));
 });
 
-// Rota para listar todos os contatos (sem autenticação para facilitar o teste)
-app.get("/contatos", async (req, res) => {
+// Rota para listar todos os contatos (agora com autenticação)
+app.get("/contatos", authenticateToken, async (req, res) => {
     try {
         const contatos = await Contact.find().sort({ createdAt: -1 });
         res.json(contatos);
