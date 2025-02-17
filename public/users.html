@@ -50,22 +50,23 @@
             background: linear-gradient(135deg, #b71c1c, #d32f2f);
         }
 
-        /* Estilo para a linha em formato quadrado com bordas arredondadas */
+        /* Estilo para a linha em volta do contato (borda verde escura) */
         #contatos-lista li {
-            background: #1b5e20; /* Verde escuro */
-            color: white;
+            border: 2px solid #1b5e20; /* Borda verde escura */
+            color: #1b5e20; /* Texto verde escuro */
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 15px; /* Bordas arredondadas */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: justify; /* Texto justificado */
             list-style-type: none;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: transparent; /* Fundo transparente */
         }
 
         #contatos-lista li:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
