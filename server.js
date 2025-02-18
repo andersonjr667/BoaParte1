@@ -183,3 +183,39 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
+
+// ============ ROTA PARA ALTERAR SENHA ==============
+app.post("/changePassword", authenticateToken, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const username = req.user.username;
+
+        // Busca o usuário no banco de dados
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        // Verifica se a senha atual está correta
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Senha atual incorreta" });
+        }
+
+        // Verifica se a nova senha é válida
+        if (newPassword.length < 6) {
+            return res.status(400).json({ error: "A nova senha deve ter pelo menos 6 caracteres" });
+        }
+
+        // Criptografa a nova senha e atualiza no banco de dados
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        res.json({ message: "Senha alterada com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao alterar senha:", error);
+        res.status(500).json({ error: "Erro interno no servidor" });
+    }
+});

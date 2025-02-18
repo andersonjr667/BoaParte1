@@ -32,6 +32,19 @@
             </button>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
+
+        <!-- Link para redefinir senha -->
+        <div style="margin-top: 20px;">
+            <a href="#" onclick="showChangePasswordForm()" style="text-decoration: underline; color: #1b5e20;">Redefinir Senha</a>
+        </div>
+
+        <!-- Formulário para redefinir senha (inicialmente oculto) -->
+        <div id="changePasswordForm" style="display: none; margin-top: 20px;">
+            <h3>Redefinir Senha</h3>
+            <input type="password" id="currentPassword" placeholder="Senha Atual">
+            <input type="password" id="newPassword" placeholder="Nova Senha">
+            <button onclick="changePassword()">Alterar Senha</button>
+        </div>
     </div>
 
     <script>
@@ -108,6 +121,44 @@
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "index.html";
+        }
+
+        // Função para mostrar o formulário de redefinição de senha
+        function showChangePasswordForm() {
+            document.getElementById("changePasswordForm").style.display = "block";
+        }
+
+        // Função para alterar a senha
+        async function changePassword() {
+            const currentPassword = document.getElementById("currentPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+
+            if (!currentPassword || !newPassword) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/changePassword", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                if (response.ok) {
+                    alert("Senha alterada com sucesso!");
+                    document.getElementById("changePasswordForm").style.display = "none";
+                } else {
+                    const errorData = await response.json();
+                    alert(`Erro: ${errorData.error}`);
+                }
+            } catch (error) {
+                console.error("Erro ao alterar senha:", error);
+                alert("Erro ao alterar senha. Verifique o console para mais detalhes.");
+            }
         }
 
         // Carrega os contatos ao abrir a página
