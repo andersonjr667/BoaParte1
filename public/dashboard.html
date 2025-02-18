@@ -181,7 +181,42 @@
             localStorage.removeItem("token");
             window.location.href = "index.html";
         }
-
+        
+       // Formulário de senha
+        function showChangePasswordForm() {
+            document.getElementById("changePasswordForm").style.display = "block";
+        }
+        // Alterar senha (com validação)
+        async function changePassword() {
+            await validateToken();
+            const currentPassword = document.getElementById("currentPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+            if (!currentPassword || !newPassword) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+            try {
+                const response = await fetch("/changePassword", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+                if (response.ok) {
+                    alert("Senha alterada com sucesso!");
+                    document.getElementById("changePasswordForm").style.display = "none";
+                } else {
+                    const errorData = await response.json();
+                    alert(`Erro: ${errorData.error}`);
+                }
+            } catch (error) {
+                console.error("Erro ao alterar senha:", error);
+                alert("Erro ao alterar senha.");
+            }
+        }
+        
         // Inicialização ao carregar a página
         window.onload = async () => {
             await initializePage();
