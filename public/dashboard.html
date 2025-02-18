@@ -6,27 +6,34 @@
     <title>Dashboard</title>
     <link rel="icon" type="image/png" href="images/image.png">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-        <!-- Imagem no canto superior esquerdo -->
-        <div class="top-left-image">
-            <img src="images/image2.png" alt="Logo">
-        </div>
-    
+    <!-- Imagem no canto superior esquerdo -->
+    <div class="top-left-image">
+        <img src="images/image2.png" alt="Logo">
+    </div>
+
     <div class="dashboard-container">
-        <h2>Adicione os contatos Aqui!</h2>
-        
+        <h2>Adicione os contatos</h2>
+
         <!-- Formulário para adicionar contatos -->
         <div class="form-container">
             <h3>Adicionar Contato</h3>
-            <input type="text" id="contactName" placeholder="Nome">
-            <input type="text" id="contactPhone" placeholder="Telefone">
+            <div class="input-container">
+                <i class="fas fa-user"></i>
+                <input type="text" id="contactName" placeholder="Digite o nome do contato" aria-label="Nome do contato">
+            </div>
+            <div class="input-container">
+                <i class="fas fa-phone"></i>
+                <input type="text" id="contactPhone" placeholder="Informe o telefone com DDD" aria-label="Telefone do contato">
+            </div>
             <button onclick="addContact()">Adicionar</button>
         </div>
 
         <!-- Lista de contatos -->
         <div class="contacts-container">
-            <h3></h3>
+            <h3>Contatos</h3>
             <ul id="contactsList"></ul>
         </div>
 
@@ -39,7 +46,7 @@
         </div>
 
         <!-- Link para redefinir senha -->
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 30px;">
             <a href="#" onclick="showChangePasswordForm()" style="text-decoration: underline; color: #1b5e20;">Redefinir Senha</a>
         </div>
 
@@ -53,8 +60,32 @@
     </div>
 
     <script>
-        // Função para adicionar um contato
+        // Verifica autenticação ao carregar
+        function checkAuth() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Você precisa estar logado para acessar esta página.");
+                window.location.href = "index.html";
+            }
+        }
+
+        // Valida token no servidor
+        async function validateToken() {
+            try {
+                const response = await fetch("/validateToken", {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                if (!response.ok) throw new Error("Token inválido");
+            } catch (error) {
+                logout();
+            }
+        }
+
+        // Função para adicionar contato (com validação)
         async function addContact() {
+            await validateToken();
             const name = document.getElementById("contactName").value;
             const phone = document.getElementById("contactPhone").value;
 
@@ -62,6 +93,15 @@
                 alert("Por favor, preencha todos os campos.");
                 return;
             }
+
+            if (!validatePhone(phone)) {
+                alert("Por favor, insira um telefone no formato (XX) XXXXX-XXXX.");
+                return;
+            }
+
+            const button = document.querySelector(".form-container button");
+            button.disabled = true;
+            button.textContent = "Adicionando...";
 
             try {
                 const response = await fetch("/addContact", {
@@ -82,12 +122,22 @@
                 }
             } catch (error) {
                 console.error("Erro ao adicionar contato:", error);
-                alert("Erro ao adicionar contato. Verifique o console para mais detalhes.");
+                alert("Erro ao adicionar contato.");
+            } finally {
+                button.disabled = false;
+                button.textContent = "Adicionar";
             }
         }
 
-        // Função para carregar contatos
+        // Valida formato do telefone
+        function validatePhone(phone) {
+            const regex = /^\(\d{2}\) \d{5}-\d{4}$/;
+            return regex.test(phone);
+        }
+
+        // Carrega contatos (com validação)
         async function loadContacts() {
+            await validateToken();
             try {
                 const response = await fetch("/getContacts", {
                     headers: {
@@ -122,19 +172,20 @@
             }
         }
 
-        // Função para logout
+        // Logout
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "index.html";
         }
 
-        // Função para mostrar o formulário de redefinição de senha
+        // Formulário de senha
         function showChangePasswordForm() {
             document.getElementById("changePasswordForm").style.display = "block";
         }
 
-        // Função para alterar a senha
+        // Alterar senha (com validação)
         async function changePassword() {
+            await validateToken();
             const currentPassword = document.getElementById("currentPassword").value;
             const newPassword = document.getElementById("newPassword").value;
 
@@ -162,12 +213,16 @@
                 }
             } catch (error) {
                 console.error("Erro ao alterar senha:", error);
-                alert("Erro ao alterar senha. Verifique o console para mais detalhes.");
+                alert("Erro ao alterar senha.");
             }
         }
 
-        // Carrega os contatos ao abrir a página
-        window.onload = loadContacts;
+        // Inicialização
+        window.onload = async () => {
+            checkAuth();
+            await validateToken();
+            loadContacts();
+        };
     </script>
 </body>
 </html>
