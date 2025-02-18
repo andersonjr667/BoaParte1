@@ -1,14 +1,21 @@
+// Redireciona se já estiver logado
+function redirectIfLoggedIn() {
+    const token = localStorage.getItem("token");
+    if (token) window.location.href = "dashboard.html";
+}
+
+// Registro
 async function register() {
     const username = document.getElementById("registerUser").value;
     const password = document.getElementById("registerPass").value;
 
     if (!username || !password) {
-        alert("Nome de usuário e senha são obrigatórios.");
+        alert("Preencha todos os campos.");
         return;
     }
 
     if (username.length < 3 || password.length < 6) {
-        alert("Nome de usuário deve ter pelo menos 3 caracteres e a senha 6 caracteres.");
+        alert("Usuário (3+ caracteres) e senha (6+ caracteres) inválidos.");
         return;
     }
 
@@ -25,20 +32,22 @@ async function register() {
 
         const data = await response.json();
         alert(data.message);
+        if (response.ok) window.location.href = "index.html";
     } catch (error) {
-        alert("Erro ao registrar. Tente novamente.");
+        alert("Erro no registro.");
     } finally {
         button.disabled = false;
         button.textContent = "Criar Conta";
     }
 }
 
+// Login
 async function login() {
     const username = document.getElementById("loginUser").value;
     const password = document.getElementById("loginPass").value;
 
     if (!username || !password) {
-        alert("Nome de usuário e senha são obrigatórios.");
+        alert("Preencha todos os campos.");
         return;
     }
 
@@ -61,9 +70,12 @@ async function login() {
             alert(data.message);
         }
     } catch (error) {
-        alert("Erro ao fazer login. Tente novamente.");
+        alert("Erro no login.");
     } finally {
         button.disabled = false;
         button.textContent = "Entrar";
     }
 }
+
+// Aplica redirecionamento automático
+window.onload = redirectIfLoggedIn;
