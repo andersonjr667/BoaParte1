@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Imagem no canto superior esquerdo -->
     <div class="top-left-image">
         <img src="images/image2.png" alt="Logo">
     </div>
@@ -17,7 +16,6 @@
     <div class="dashboard-container">
         <h2>Adicione os contatos</h2>
 
-        <!-- Formulário para adicionar contatos -->
         <div class="form-container">
             <h3>Adicionar Contato</h3>
             <div class="input-container">
@@ -31,26 +29,20 @@
             <button onclick="addContact()">Adicionar</button>
         </div>
 
-        <!-- Lista de contatos -->
         <div class="contacts-container">
             <h3>Contatos</h3>
             <ul id="contactsList"></ul>
         </div>
 
-        <!-- Botões de ação -->
         <div class="dashboard-actions">
-            <button class="view-contacts-btn" onclick="window.location.href='/users'">
-                Ver Todos os Contatos
-            </button>
+            <button class="view-contacts-btn" onclick="window.location.href='/users'">Ver Todos os Contatos</button>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
-        <!-- Link para redefinir senha -->
         <div style="margin-top: 30px;">
             <a href="#" onclick="showChangePasswordForm()" style="text-decoration: underline; color: #1b5e20;">Redefinir Senha</a>
         </div>
 
-        <!-- Formulário para redefinir senha (inicialmente oculto) -->
         <div id="changePasswordForm" style="display: none; margin-top: 20px;">
             <h3>Redefinir Senha</h3>
             <input type="password" id="currentPassword" placeholder="Senha Atual">
@@ -60,32 +52,45 @@
     </div>
 
     <script>
-        // Verifica autenticação ao carregar
+        // Função que verifica se o usuário está logado
         function checkAuth() {
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Você precisa estar logado para acessar esta página.");
-                window.location.href = "index.html";
+                window.location.href = "index.html"; // Redireciona para a página de login se não estiver autenticado
             }
         }
 
-        // Valida token no servidor
+        // Função para validar o token no servidor
         async function validateToken() {
+            const token = localStorage.getItem("token");
+            if (!token) return false;
+
             try {
                 const response = await fetch("/validateToken", {
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        "Authorization": `Bearer ${token}`
                     }
                 });
-                if (!response.ok) throw new Error("Token inválido");
+                return response.ok;
             } catch (error) {
-                logout();
+                return false;
             }
         }
 
-        // Função para adicionar contato (com validação)
+        // Função que valida se o token é válido e executa a lógica de login ou logout
+        async function initializePage() {
+            const tokenValid = await validateToken();
+            if (!tokenValid) {
+                alert("Token inválido ou expirado. Você será desconectado.");
+                logout();
+            } else {
+                loadContacts(); // Carrega os contatos se o token for válido
+            }
+        }
+
+        // Função para adicionar um contato
         async function addContact() {
-            await validateToken();
             const name = document.getElementById("contactName").value;
             const phone = document.getElementById("contactPhone").value;
 
@@ -135,9 +140,8 @@
             return regex.test(phone);
         }
 
-        // Carrega contatos (com validação)
+        // Função para carregar os contatos
         async function loadContacts() {
-            await validateToken();
             try {
                 const response = await fetch("/getContacts", {
                     headers: {
@@ -172,56 +176,15 @@
             }
         }
 
-        // Logout
+        // Função de logout
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "index.html";
         }
 
-        // Formulário de senha
-        function showChangePasswordForm() {
-            document.getElementById("changePasswordForm").style.display = "block";
-        }
-
-        // Alterar senha (com validação)
-        async function changePassword() {
-            await validateToken();
-            const currentPassword = document.getElementById("currentPassword").value;
-            const newPassword = document.getElementById("newPassword").value;
-
-            if (!currentPassword || !newPassword) {
-                alert("Por favor, preencha todos os campos.");
-                return;
-            }
-
-            try {
-                const response = await fetch("/changePassword", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
-                    body: JSON.stringify({ currentPassword, newPassword })
-                });
-
-                if (response.ok) {
-                    alert("Senha alterada com sucesso!");
-                    document.getElementById("changePasswordForm").style.display = "none";
-                } else {
-                    const errorData = await response.json();
-                    alert(`Erro: ${errorData.error}`);
-                }
-            } catch (error) {
-                console.error("Erro ao alterar senha:", error);
-                alert("Erro ao alterar senha.");
-            }
-        }
-
-        // Inicialização
+        // Inicialização ao carregar a página
         window.onload = async () => {
-            checkAuth();
-            await validateToken();
-            loadContacts();
+            await initializePage();
         };
     </script>
 </body>
