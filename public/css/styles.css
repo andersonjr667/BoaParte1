@@ -193,3 +193,16 @@ button:hover {
     filter: blur(5px);
     pointer-events: none;
 }
+
+/* Estilo para a imagem no canto superior esquerdo */
+.top-left-image {
+    position: absolute; /* Posicionamento absoluto */
+    top: 10px; /* Distância do topo */
+    left: 10px; /* Distância da esquerda */
+    z-index: 1000; /* Garante que a imagem fique acima de outros elementos */
+}
+
+.top-left-image img {
+    width: 100px; /* Ajuste o tamanho da imagem conforme necessário */
+    height: auto; /* Mantém a proporção da imagem */
+}
